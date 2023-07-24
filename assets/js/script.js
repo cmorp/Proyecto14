@@ -54,8 +54,36 @@ const propiedadesJSON = [
 
 //SELECCIÓN DE ELEMENTOS DEL DOM
 const card = document.querySelector(".propiedades");
-const total = document.querySelector("#total");
+const totalSpan = document.querySelector("#total");
 const button = document.querySelector("button.btn.btn-warning");
+const cuartosInput = document.querySelector("#cuartos");
+const mdesdeInput = document.querySelector("#mdesde");
+const mhastaInput = document.querySelector("#mhasta");
+
+
+//FUNCIÓN QUE VALIDA LOS VALORES INGRESADOS POR EL USUARIO
+function validarCampoNumerico(input) {
+    const value = input.value;
+    const filteredValue = value.replace(/[\+\-\,\.\s]/g, ''); // Se filtra los símbolos indeseados
+
+    if (value !== filteredValue) {
+        input.value = filteredValue;
+    }
+}
+
+
+//EVENTOS DE VALIDACIÓN PARA LOS CAMPOS DE ENTRADA
+cuartosInput.addEventListener("input", function (event) {
+    validarCampoNumerico(event.target);
+});
+
+mdesdeInput.addEventListener("input", function (event) {
+    validarCampoNumerico(event.target);
+});
+
+mhastaInput.addEventListener("input", function (event) {
+    validarCampoNumerico(event.target);
+});
 
 
 //FUNCIÓN QUE COMPLETA LOS CAMPOS DE LA TARJETA CON LOS VALORES DE LAS VARIABLES
@@ -64,10 +92,13 @@ function cards(cuartos, mdesde, mhasta) {
     let contar = 0;
 
 
-//CICLO QUE RECORRE LAS PROPIEDADES DE LOS OBJETOS DEL ARREGLO
+    //CICLO QUE RECORRE LAS PROPIEDADES DE LOS OBJETOS DEL ARREGLO
     for (let propiedad of propiedadesJSON) {
 
-        if (propiedad.rooms >= cuartos && propiedad.m >= mdesde && propiedad.m <= mhasta) {
+        if (
+            propiedad.rooms === cuartos && 
+            propiedad.m >= mdesde && 
+            propiedad.m <= mhasta) {
 
             html += `<div class="propiedad"> 
                 <div class="img" style="background-image: url('${propiedad.src}')"></div> 
@@ -82,13 +113,13 @@ function cards(cuartos, mdesde, mhasta) {
                 </section> 
             </div>`
 
-            contar = contar + 1
+            contar++
 
         }
     }
 
     card.innerHTML = html
-    total.innerHTML = contar
+    totalSpan.textContent = contar // Se actualiza el contenido del <span> con el nuevo total
 }
 
 
@@ -99,21 +130,21 @@ function validar() {
     let mhasta = document.querySelector("#mhasta").value;
 
 
-//DECLARAR QUE LOS VALORES DE LAS VARIABLES SON NÚMEROS
+    //DECLARAR QUE LOS VALORES DE LAS VARIABLES SON NÚMEROS
     cuartos = Number(cuartos), mdesde = Number(mdesde), mhasta = Number(mhasta)
 
 
-//CONDICIONES
+    //CONDICIONES
     if (cuartos == '' && mdesde == '' && mhasta == '') {
         alert("Debes rellenar todos los campos")
 
-    } else if (cuartos <= 0 || mdesde <= 0 || mhasta <= 0) {
-        alert("Los valores deben ser mayor a 1")
+    } else if (cuartos == '' || mdesde == '' || mhasta == '') {
+        alert("Debes rellenar todos los campos")
 
-//EL VALOR DE "HASTA" DEBE SER MAYOR QUE EL VALOR DE "DESDE" --> SI ESTO OCURRE SE EJECUTA LA FUNCIÓN CARDS
+        //EL VALOR DE "HASTA" DEBE SER MAYOR QUE EL VALOR DE "DESDE" --> SI ESTO OCURRE SE EJECUTA LA FUNCIÓN CARDS
     } else if (mdesde < mhasta) {
-        cards(cuartos, mdesde, mhasta) 
-    } 
+        cards(cuartos, mdesde, mhasta)
+    }
 }
 
 
